@@ -3,6 +3,7 @@ package net.virtalab.commons;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 /**
  * Storage for various types
@@ -13,6 +14,8 @@ import java.util.NoSuchElementException;
 public class Bundle {
 
     private Map<String, Object> map = new HashMap<>();
+
+    private static final String NO_DEFAULT_VALUE_MARKER = "MARKER";
 
     public static Bundle getInstance() {
         return new Bundle();
@@ -32,12 +35,16 @@ public class Bundle {
         map.put(key, value);
     }
 
+    public void putString(String myKey, String defaultString) {
+        putObject(myKey, defaultString);
+    }
+
     public String getString(String key) throws NoSuchElementException, IllegalArgumentException {
         if (key == null) {
             throw new IllegalArgumentException("Key cannot be <null>");
         }
-        String str = getString(key, null);
-        if (str == null) {
+        String str = getString(key, NO_DEFAULT_VALUE_MARKER);
+        if (Objects.equals(str, NO_DEFAULT_VALUE_MARKER)) {
             throw new NoSuchElementException("No element stored under key: " + key);
         }
         return str;
@@ -52,6 +59,9 @@ public class Bundle {
             return (String) o;
         } catch (ClassCastException cce) {
             //TODO warning
+            if(Objects.equals(defaultValue, NO_DEFAULT_VALUE_MARKER)){
+                throw cce;
+            }
             return defaultValue;
         }
     }

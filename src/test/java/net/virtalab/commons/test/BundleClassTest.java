@@ -38,4 +38,27 @@ public class BundleClassTest {
        Bundle bundle = Bundle.getInstance();
        bundle.getString("");
     }
+
+    @Test
+    public void gettingDefaultValueInsteadOfExceptionWhenNoValueFound() {
+        String myKey = "MY_KEY";
+        String defaultString = "DEFAULT_STR";
+        Bundle bundle = Bundle.getInstance();
+
+        bundle.putString(myKey, defaultString);
+        String actualString = bundle.getString(myKey, defaultString);
+
+        assertTrue(actualString.equals(defaultString));
+    }
+
+    @Test(expected = ClassCastException.class)
+    public void gettingObjectOfWrongTypeShouldRaiseException(){
+        String myKey = "MY_KEY";
+        Object objToStore = new Object();
+
+        Bundle bundle = Bundle.getInstance();
+        bundle.putObject(myKey, objToStore);
+
+        String str = bundle.getString(myKey);
+    }
 }
