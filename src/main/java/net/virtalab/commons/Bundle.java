@@ -2,6 +2,7 @@ package net.virtalab.commons;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 /**
  * Storage for various types
@@ -22,6 +23,36 @@ public class Bundle {
     }
 
     public void putObject(String key, Object value) {
+        if (key == null) {
+            throw new IllegalArgumentException("Key cannot be <null>");
+        }
+        if (key.trim().isEmpty()) {
+            throw new IllegalArgumentException("Empty key is weird. Cannot store anything using empty key");
+        }
         map.put(key, value);
+    }
+
+    public String getString(String key) throws NoSuchElementException, IllegalArgumentException {
+        if (key == null) {
+            throw new IllegalArgumentException("Key cannot be <null>");
+        }
+        String str = getString(key, null);
+        if (str == null) {
+            throw new NoSuchElementException("No element stored under key: " + key);
+        }
+        return str;
+    }
+
+    public String getString(String key, String defaultValue) {
+        Object o = map.get(key);
+        if (o == null) {
+            return defaultValue;
+        }
+        try {
+            return (String) o;
+        } catch (ClassCastException cce) {
+            //TODO warning
+            return defaultValue;
+        }
     }
 }
