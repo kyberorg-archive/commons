@@ -16,26 +16,26 @@ import static org.junit.Assert.assertTrue;
 public class BundleClassTest {
     @Test
     public void noPayloadPresentRightAfterInit() {
-        Bundle bundle = Bundle.getInstance();
+        Bundle bundle = Bundle.createEmptyBundle();
         assertTrue(bundle.isEmpty());
     }
 
 
     @Test(expected = IllegalArgumentException.class)
     public void cannotPutWithNullKey(){
-        Bundle bundle = Bundle.getInstance();
-        bundle.putObject(null, new Object());
+        Bundle bundle = Bundle.createEmptyBundle();
+        bundle.put(null, new Object());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void cannotPutAnythingWithEmptyKey() {
-        Bundle bundle = Bundle.getInstance();
-        bundle.putObject("", new Object());
+        Bundle bundle = Bundle.createEmptyBundle();
+        bundle.put("", new Object());
     }
 
     @Test(expected = NoSuchElementException.class)
     public void cannotGetAnythingWithEmptyKey(){
-       Bundle bundle = Bundle.getInstance();
+       Bundle bundle = Bundle.createEmptyBundle();
        bundle.getString("");
     }
 
@@ -43,7 +43,7 @@ public class BundleClassTest {
     public void gettingDefaultValueInsteadOfExceptionWhenNoValueFound() {
         String myKey = "MY_KEY";
         String defaultString = "DEFAULT_STR";
-        Bundle bundle = Bundle.getInstance();
+        Bundle bundle = Bundle.createEmptyBundle();
 
         bundle.putString(myKey, defaultString);
         String actualString = bundle.getString(myKey, defaultString);
@@ -56,8 +56,8 @@ public class BundleClassTest {
         String myKey = "MY_KEY";
         Object objToStore = new Object();
 
-        Bundle bundle = Bundle.getInstance();
-        bundle.putObject(myKey, objToStore);
+        Bundle bundle = Bundle.createEmptyBundle();
+        bundle.put(myKey, objToStore);
 
         String str = bundle.getString(myKey);
     }
